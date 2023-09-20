@@ -29,7 +29,7 @@ export function ImageGallery({ request }) {
         }, 1000);
         setImages([...hits]);
         setLoader(false);
-        setVisibleBtn(false)
+        setVisibleBtn(false);
         return;
       }
       setImages([...hits]);
@@ -38,7 +38,6 @@ export function ImageGallery({ request }) {
       setPage(1);
       setLoader(false);
     });
-    
   }, [request]);
 
   useEffect(() => {
