@@ -24,7 +24,9 @@ export function ImageGallery({ request }) {
     setLoader(true);
     requestToTheServer(request, 1).then(({ hits, totalHits }) => {
       if (totalHits === 0) {
-        alert('Sorry, no content found!');
+        setTimeout(() => {
+          alert('Sorry, no content found!');
+        }, 1000);
         setImages([...hits]);
         setLoader(false);
         setVisibleBtn(false)
