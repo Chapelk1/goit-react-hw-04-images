@@ -31,6 +31,7 @@ export function App() {
           }, 1000);
           setLoader(false);
           setVisibleBtn(false);
+          setImages([...hits]);
           return;
         }
         setImages([...hits]);
