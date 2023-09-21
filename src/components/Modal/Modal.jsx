@@ -9,14 +9,14 @@ const body = document.querySelector('body');
 export function Modal({onToggle, img, tag })  {
 
     useEffect(() => {
-      window.addEventListener('keydown', onKeyDown)
+      window.addEventListener('keydown', onKeyDown);
       body.classList.add('hidden-scroll');
-      
+
       return () => {
         window.removeEventListener('keydown', onKeyDown);
-      body.classList.remove('hidden-scroll');
-      }
-    })
+        body.classList.remove('hidden-scroll');
+      };
+    }, [onToggle]);
     
 
       const onKeyDown = (e) => {

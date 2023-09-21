@@ -1,88 +1,11 @@
 import {ImageGalleryItem} from 'components/ImageGalleryItem/ImageGalleryItem'
-import { useState, useEffect } from 'react'
-import { requestToTheServer } from 'api-pixabay';
-import { Button } from 'components/Button/Button';
-import {Loader} from 'components/Loader/Loader'
-import { List, Container } from './ImageGalery.styled';
+import { List } from './ImageGalery.styled';
 import PropTypes from 'prop-types';
 
-export function ImageGallery({ request }) {
-  const [images, setImages] = useState(null);
-  const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
-  const [visibleBtn, setVisibleBtn] = useState(false);
-  const [loader, setLoader] = useState(false);
-  const [firstDownload, setFirstDownload] = useState(true);
-
-
-  useEffect(() => {
-    if (firstDownload) {
-      setFirstDownload(false);
-      return;
-    }
-    setLoader(true);
-    requestToTheServer(request, 1).then(({ hits, totalHits }) => {
-      if (totalHits === 0) {
-        setTimeout(() => {
-          alert('Sorry, no content found!');
-        }, 1000);
-        setImages([...hits]);
-        setLoader(false);
-        setVisibleBtn(false);
-        return;
-      }
-      setImages([...hits]);
-      setTotal(hits.length);
-      setTotalItems(totalHits);
-      setPage(1);
-      setLoader(false);
-    });
-  }, [request]);
-
-  useEffect(() => {
-    if (firstDownload) {
-      setFirstDownload(false);
-      return;
-    }
-    
-    if (page !== 1) {
-      setLoader(true);
-      setVisibleBtn(false);
-
-      requestToTheServer(request, page).then(({ hits, totalHits }) => {
-        setImages(state => [...state, ...hits]);
-        setTotal(state => state + hits.length);
-      });
-    }
-  }, [page]);
-
-
-
-  useEffect(() => {
-    if (firstDownload) {
-      setFirstDownload(false);
-      return;
-    }
-    if (totalItems <= total) {
-      setLoader(false);
-      setVisibleBtn(false);
-      setTimeout(()=>{alert('Last page loaded.')}, 1000)
-    } else {
-      setLoader(false);
-      setVisibleBtn(true);
-    }
-  }, [total, totalItems]);
-
-
-
-  const loadNewImages = () => {
-    setPage(prevState => prevState + 1);
-  };
+export function ImageGallery({ images }) {
+  
 
   return (
-    <Container>
-      {images && (
         <List>
           {images.map(({ id, webformatURL, largeImageURL, tags }) => (
             <ImageGalleryItem
@@ -93,10 +16,6 @@ export function ImageGallery({ request }) {
             />
           ))}
         </List>
-      )}
-      {visibleBtn && <Button onClick={loadNewImages} />}
-      {loader && <Loader />}
-    </Container>
   );
 }
 
@@ -208,5 +127,5 @@ export function ImageGallery({ request }) {
 
 
 ImageGallery.propTypes = {
-  request: PropTypes.string.isRequired,
+  images: PropTypes.array.isRequired,
 }
