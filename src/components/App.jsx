@@ -23,36 +23,34 @@ export function App() {
     setLoader(true);
     setVisibleBtn(false);
 
-    if (page === 1) {
-      requestToTheServer(request, 1).then(({ hits, totalHits }) => {
-        if (totalHits === 0) {
-          setTimeout(() => {
-            alert('Sorry, no content found!');
-          }, 1000);
-          setLoader(false);
-          setVisibleBtn(false);
+    
+    requestToTheServer(request, page).then(({ hits, totalHits }) => {
+        if (page === 1) {
+          if (totalHits === 0) {
+            setTimeout(() => {
+              alert('Sorry, no content found!');
+            }, 1000);
+            setLoader(false);
+            setVisibleBtn(false);
+            setImages([...hits]);
+            return;
+          }
           setImages([...hits]);
+
+          if (hits.length === totalHits) {
+            setLoader(false);
+            setVisibleBtn(false);
+            setTimeout(() => {
+              alert('Last page loaded.');
+            }, 1000);
+          } else {
+            setLoader(false);
+            setVisibleBtn(true);
+            addTotalValue(totalHits);
+          }
           return;
-        }
-        setImages([...hits]);
-
-        if (hits.length === totalHits) {
-          setLoader(false);
-          setVisibleBtn(false);
-          setTimeout(() => {
-            alert('Last page loaded.');
-          }, 1000);
-        } else {
-          setLoader(false);
-          setVisibleBtn(true);
-          addTotalValue(totalHits);
-        }
-      });
-      return;
-    }
-
-    if (page !== 1) {
-      requestToTheServer(request, page).then(({ hits }) => {
+      }
+      if (page !== 1) {
         setImages(state => [...state, ...hits]);
 
         if (total === page) {
@@ -65,8 +63,8 @@ export function App() {
           setLoader(false);
           setVisibleBtn(true);
         }
-      });
-    }
+      }
+      }); 
   }, [request, page]);
 
   function addTotalValue(value) {
